@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
+import { Chart } from 'react-charts'
 import { useQuery, useMutation } from 'react-query'
 import { Button, TextField } from '@material-ui/core'
 
@@ -26,7 +27,6 @@ function Home() {
   })
 
   function mapStories(data) {
-    data.length = storyLimit
     for (let i = 0; i < data.length; i++) {
       storyItem.mutate(data[i])
     }
@@ -37,6 +37,27 @@ function Home() {
     newChartData.push([story.descendants, story.score])
     setChartData(newChartData)
   }
+
+  function handleGetStoriesButtonClick() {
+    setChartData([])
+    storyList.refetch()
+  }
+
+  const data = useMemo(() =>
+    [
+      {
+        label: 'Series 1',
+        data: chartData
+      },
+    ], [chartData]
+  )
+
+  const axes = useMemo(() =>
+    [
+      { primary: true, type: 'linear', position: 'bottom' },
+      { type: 'linear', position: 'left' }
+    ], []
+  )
 
   const isLoading = storyList.isLoading || storyItem.isLoading
 
@@ -55,11 +76,17 @@ function Home() {
           className='limit-button'
           variant='contained'
           color='primary'
-          onClick={() => storyList.refetch()}
+          onClick={handleGetStoriesButtonClick}
         >
           Show Stories Chart
         </Button>
         {isLoading && <Loading />}
+        {!isLoading && chartData.length > 0 &&
+          <div className="chart-wrapper">
+            <p>Line chart of stories</p>
+            <Chart data={data} axes={axes} />
+          </div>
+        }
       </div>
     </div>
   )

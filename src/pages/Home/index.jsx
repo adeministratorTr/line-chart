@@ -1,21 +1,44 @@
 import { useState } from 'react'
-import { useQuery } from 'react-query'
+import { useQuery, useMutation } from 'react-query'
 import { Button, TextField } from '@material-ui/core'
 
-import { getTopStoryList } from 'services/story'
+import Loading from 'components/Loading'
+import { getTopStoryList, getStoryItem } from 'services/story'
 
 import './style.scss'
 
 function Home() {
   const [storyLimit, setStoryLimit] = useState(process.env.REACT_APP_DEFAULT_CHART_COUNT)
+  const [chartData, setChartData] = useState([])
 
   const storyList = useQuery('getTopStoryList', getTopStoryList, {
     enabled: false,
     onSuccess: (data) => {
       data.length = storyLimit
-      console.log(data) // TODO map story data
+      mapStories(data)
     }
   })
+
+  const storyItem = useMutation((itemId) => getStoryItem(itemId), {
+    onSuccess: (data) => {
+      addStoryToChart(data)
+    }
+  })
+
+  function mapStories(data) {
+    data.length = storyLimit
+    for (let i = 0; i < data.length; i++) {
+      storyItem.mutate(data[i])
+    }
+  }
+
+  function addStoryToChart(story) {
+    const newChartData = chartData;
+    newChartData.push([story.descendants, story.score])
+    setChartData(newChartData)
+  }
+
+  const isLoading = storyList.isLoading || storyItem.isLoading
 
   return (
     <div className='home-page'>
@@ -36,6 +59,7 @@ function Home() {
         >
           Show Stories Chart
         </Button>
+        {isLoading && <Loading />}
       </div>
     </div>
   )

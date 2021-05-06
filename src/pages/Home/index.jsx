@@ -76,6 +76,7 @@ function Home() {
           className='limit-button'
           variant='contained'
           color='primary'
+          disabled={(storyLimit < 1 || storyLimit > 50)}
           onClick={handleGetStoriesButtonClick}
         >
           Show Stories Chart

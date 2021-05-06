@@ -1,0 +1,9 @@
+{
+  "baseUrl": "http://localhost:3000",
+  "video": false,
+  "videoUploadOnPasses": false,
+  "env": {
+    "MAX_STORY_NUMBER": 50,
+    "DEFAULT_STORY_NUMBER": 10
+  }
+}

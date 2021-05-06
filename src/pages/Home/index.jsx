@@ -62,7 +62,7 @@ function Home() {
   const isLoading = storyList.isLoading || storyItem.isLoading
 
   return (
-    <div className='home-page'>
+    <div className='home-page' data-testid='StoryInputs'>
       <div className='user-inputs'>
         <TextField
           label='Number of Story'
@@ -87,7 +87,7 @@ function Home() {
         </Button>
         {isLoading && <Loading />}
         {!isLoading && chartData.length > 0 &&
-          <div className="chart-wrapper">
+          <div className='chart-wrapper' data-testid='LineChart'>
             <p>Line chart of stories</p>
             <Chart data={data} axes={axes} />
           </div>

@@ -9,7 +9,7 @@ import { getTopStoryList, getStoryItem } from 'services/story'
 import './style.scss'
 
 function Home() {
-  const [storyLimit, setStoryLimit] = useState(process.env.REACT_APP_DEFAULT_CHART_COUNT)
+  const [storyLimit, setStoryLimit] = useState(process.env.REACT_APP_DEFAULT_STORY_NUMBER)
   const [chartData, setChartData] = useState([])
 
   const storyList = useQuery('getTopStoryList', getTopStoryList, {
@@ -68,7 +68,7 @@ function Home() {
           label='Number of Story'
           type='number'
           variant='outlined'
-          helperText='Max 50'
+          helperText={`Max ${process.env.REACT_APP_MAX_STORY_NUMBER}`}
           value={storyLimit}
           onChange={(e) => setStoryLimit(e.target.value)}
         />
@@ -76,7 +76,11 @@ function Home() {
           className='limit-button'
           variant='contained'
           color='primary'
-          disabled={(storyLimit < 1 || storyLimit > 50)}
+          disabled={
+            (storyLimit < 1
+              || storyLimit > process.env.REACT_APP_MAX_STORY_NUMBER
+            )
+          }
           onClick={handleGetStoriesButtonClick}
         >
           Show Stories Chart

@@ -78,7 +78,7 @@ function Home() {
           color='primary'
           disabled={
             (storyLimit < 1
-              || storyLimit > process.env.REACT_APP_MAX_STORY_NUMBER
+              || storyLimit > +process.env.REACT_APP_MAX_STORY_NUMBER
             )
           }
           onClick={handleGetStoriesButtonClick}
